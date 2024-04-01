@@ -9,6 +9,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import JapaneseBackground from "../assets/japanese_background.png";
+import MockupHabits from "../assets/ippo_mockup_habits.png";
+import MockupFriends from "../assets/ippo_mockup_friends.png";
 
 import { Login } from "../component/Login";
 import { SignUp } from "../component/SignUp";
@@ -87,7 +90,7 @@ export function HomePage() {
         {/* Partie droite avec image en arrière-plan */}
         <Box
           flex="1"
-          backgroundImage="url('src/assets/japanese_background.png')"
+          backgroundImage={JapaneseBackground}
           backgroundSize="cover"
         >
           <Flex
@@ -98,20 +101,11 @@ export function HomePage() {
           >
             <Box textAlign="center">
               {/* Première image centrée verticalement à gauche */}
-              <Image
-                src="src/assets/ippo_mockup_habits.png"
-                alt="Image 1"
-                height="80vh"
-                mr="2"
-              />
+              <Image src={MockupHabits} alt="Image 1" height="80vh" mr="2" />
             </Box>
             <Box marginLeft="7%">
               {/* Deuxième image centrée verticalement à gauche */}
-              <Image
-                src="src/assets/ippo_mockup_friends.png"
-                alt="Image 2"
-                height="80vh"
-              />
+              <Image src={MockupFriends} alt="Image 2" height="80vh" />
             </Box>
           </Flex>
         </Box>

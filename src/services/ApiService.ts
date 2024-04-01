@@ -9,9 +9,11 @@ import {
 } from "./ApiModels";
 import axios from "axios";
 
+const API_URL = process.env.API_URL;
+
 const LoginApi = async (loginInfo: UserLoginDTO): Promise<LoginResponse> => {
   const response = await axios.post<LoginResponse>(
-    "http://localhost:3000/auth/login",
+    API_URL + "/auth/login",
     loginInfo
   );
 
@@ -22,7 +24,7 @@ const SignUpApi = async (
   user: CreateUserDTO
 ): Promise<CreateUserResponseDTO> => {
   const response = await axios.post<CreateUserResponseDTO>(
-    "http://localhost:3000/auth/signup",
+    API_URL + "/auth/signup",
     user
   );
 
@@ -30,7 +32,7 @@ const SignUpApi = async (
 };
 
 const GetMe = async (): Promise<AccountDTO> => {
-  const response = await axios.get("http://localhost:3000/accounts/me", {
+  const response = await axios.get(API_URL + "/accounts/me", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -40,7 +42,7 @@ const GetMe = async (): Promise<AccountDTO> => {
 };
 
 const GetFollowers = async (): Promise<UserDTO[]> => {
-  const response = await axios.get("http://localhost:3000/follows/followers/", {
+  const response = await axios.get(API_URL + "/follows/followers/", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -50,20 +52,17 @@ const GetFollowers = async (): Promise<UserDTO[]> => {
 };
 
 const GetFollowings = async (): Promise<UserDTO[]> => {
-  const response = await axios.get(
-    "http://localhost:3000/follows/followings/",
-    {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }
-  );
+  const response = await axios.get(API_URL + "/follows/followings/", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
 
   return response.data.data;
 };
 
 const GetFeed = async (): Promise<ValidationDTO[]> => {
-  const response = await axios.get("http://localhost:3000/feed", {
+  const response = await axios.get(API_URL + "/feed", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -74,7 +73,7 @@ const GetFeed = async (): Promise<ValidationDTO[]> => {
 
 const LikeUnlike = async (validationId: number) => {
   const response = await axios.post(
-    `http://localhost:3000/validation/${validationId}/likes`,
+    `${API_URL}/validation/${validationId}/likes`,
     {},
     {
       headers: {
@@ -86,7 +85,7 @@ const LikeUnlike = async (validationId: number) => {
 };
 
 const GetRequests = async () => {
-  const response = await axios.get("http://localhost:3000/follows/requests/", {
+  const response = await axios.get(API_URL + "/follows/requests/", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -94,9 +93,21 @@ const GetRequests = async () => {
   return response.data.data;
 };
 
+const SendFollowRequest = async (userId: number) => {
+  await axios.post(
+    `${API_URL}/follows/follow/${userId}`,
+    {},
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+
 const AcceptFollowRequest = async (userId: number) => {
   const response = await axios.put(
-    `http://localhost:3000/follows/accept/${userId}`,
+    `${API_URL}/follows/accept/${userId}`,
     {},
     {
       headers: {
@@ -108,7 +119,7 @@ const AcceptFollowRequest = async (userId: number) => {
 };
 
 const DeleteFollowing = async (userId: number) => {
-  await axios.delete(`http://localhost:3000/follows/following/${userId}`, {
+  await axios.delete(`${API_URL}/follows/following/${userId}`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -116,11 +127,20 @@ const DeleteFollowing = async (userId: number) => {
 };
 
 const DeleteFollower = async (userId: number) => {
-  await axios.delete(`http://localhost:3000/follows/follower/${userId}`, {
+  await axios.delete(`${API_URL}/follows/follower/${userId}`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
   });
+};
+
+const SearchUsers = async (word: string): Promise<UserDTO[]> => {
+  const users = await axios.get(`${API_URL}/accounts/?username=${word}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+  return users.data.data;
 };
 
 export {
@@ -135,4 +155,6 @@ export {
   GetRequests,
   DeleteFollower,
   DeleteFollowing,
+  SearchUsers,
+  SendFollowRequest,
 };

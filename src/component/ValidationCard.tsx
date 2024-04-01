@@ -12,9 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { timeAgo } from "../utils/DateUtils";
 import { UserDTO, ValidationDTO } from "../services/ApiModels";
-import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { useState } from "react";
 import { LikeUnlike } from "../services/ApiService";
+import { useNavigate } from "react-router-dom";
 
 type ValidationCardProps = {
   el: ValidationDTO;
@@ -22,6 +23,7 @@ type ValidationCardProps = {
 
 export function ValidationCard({ el }: ValidationCardProps) {
   const loggedUser: UserDTO = JSON.parse(localStorage.getItem("user")!);
+  const navigate = useNavigate();
 
   const [isLiked, setIsLiked] = useState(
     el.likedBy.map((el) => el.userId).includes(loggedUser.id)
@@ -43,6 +45,9 @@ export function ValidationCard({ el }: ValidationCardProps) {
         <Heading size="md">
           <Flex>
             <Image
+              onClick={() => {
+                navigate(`/user/${el.Habit.user.id}`);
+              }}
               borderRadius="full"
               boxSize="40px"
               mr="10px"
@@ -63,7 +68,7 @@ export function ValidationCard({ el }: ValidationCardProps) {
       </CardBody>
       <CardFooter>
         <Icon
-          as={isLiked ? IoHeart : IoHeartOutline}
+          as={isLiked ? FaHeart : FaRegHeart}
           color={isLiked ? "red" : "black"}
           fontSize="lg"
           onClick={() => {

@@ -14,6 +14,7 @@ export type UserDTO = {
   password: string;
   imageUrl: string;
   createdAt: string;
+  status: null | "following" | "requested" | "not_following";
   updatedAt: Date;
 };
 
@@ -64,6 +65,6 @@ export type ValidationDTO = {
   Habit: HabitDTO;
   isValid: boolean;
   isLiked: boolean | null;
-  likedBy: Array<number>;
-  _count: any;
+  likedBy: Array<{ userId: number }>;
+  _count: { likedBy: number };
 };

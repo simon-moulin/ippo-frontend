@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { UserDTO } from "../services/ApiModels";
 import { AcceptFollowRequest, GetRequests } from "../services/ApiService";
+import { useNavigate } from "react-router-dom";
 
 type ModalProps = {
   isOpen: boolean;
@@ -23,7 +24,7 @@ type ModalProps = {
 
 export function RequestsModal({ isOpen, onClose }: ModalProps) {
   const [loading, setLoading] = useState(false);
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserDTO[]>([]);
 
   useEffect(() => {
@@ -57,7 +58,12 @@ export function RequestsModal({ isOpen, onClose }: ModalProps) {
                   mb="5px"
                   key={user.id}
                 >
-                  <Flex alignItems="center">
+                  <Flex
+                    alignItems="center"
+                    onClick={() => {
+                      navigate(`/user/${user.id}`);
+                    }}
+                  >
                     <Image
                       borderRadius="full"
                       boxSize="40px"

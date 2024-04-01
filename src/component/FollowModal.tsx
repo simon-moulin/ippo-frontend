@@ -20,6 +20,7 @@ import {
   GetFollowers,
   GetFollowings,
 } from "../services/ApiService";
+import { useNavigate } from "react-router-dom";
 
 type LoginProps = {
   isOpen: boolean;
@@ -29,7 +30,7 @@ type LoginProps = {
 
 export function FollowModal({ isOpen, onClose, type }: LoginProps) {
   const [loading, setLoading] = useState(false);
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserDTO[]>([]);
 
   useEffect(() => {
@@ -78,7 +79,13 @@ export function FollowModal({ isOpen, onClose, type }: LoginProps) {
                   mb="5px"
                   key={user.id}
                 >
-                  <Flex mb="5px" key={user.id}>
+                  <Flex
+                    mb="5px"
+                    key={user.id}
+                    onClick={() => {
+                      navigate(`/user/${user.id}`);
+                    }}
+                  >
                     <Image
                       borderRadius="full"
                       boxSize="40px"
