@@ -1,0 +1,24 @@
+stages:
+  - build
+  # - deploy
+
+build:
+  before_script:
+    - 'docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY'
+  image: "docker:latest"
+  script:
+    - "docker image build --tag registry.gitlab.com/ippo1/ippo-web/ippo-web:latest --tag registry.gitlab.com/ippo1/ippo-web/ippo-web:$CI_COMMIT_SHA ."
+    - "docker push registry.gitlab.com/ippo1/ippo-web/ippo-web:latest"
+    - "docker push registry.gitlab.com/ippo1/ippo-web/ippo-web:$CI_COMMIT_SHA"
+  services:
+    - "docker:dind"
+  stage: build
+# deploy:
+#   image: kroniak/ssh-client
+#   stage: deploy
+#   script:
+#     - chmod 400 $MASTER_SSH
+#     # Login to Gitlab Container registry
+#     - ssh -o StrictHostKeyChecking=no -i $MASTER_SSH "${MASTER_USER}@${MASTER_HOST}" "sudo docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
+#     - ssh -o StrictHostKeyChecking=no -i $MASTER_SSH "${MASTER_USER}@${MASTER_HOST}" "sudo docker compose -f ~/traefik-docker-config/services/docker-compose-ippo-web.yml pull && sudo docker compose -f ~/traefik-docker-config/services/docker-compose-ippo-web.yml up -d"
+#   when: manual

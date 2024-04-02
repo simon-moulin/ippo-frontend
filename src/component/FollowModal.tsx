@@ -12,14 +12,14 @@ import {
   Image,
   CircularProgress,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { UserDTO } from "../services/ApiModels";
 import {
   DeleteFollower,
   DeleteFollowing,
   GetFollowers,
   GetFollowings,
 } from "../services/ApiService";
+import { useEffect, useState } from "react";
+import { UserDTO } from "../services/ApiModels";
 import { useNavigate } from "react-router-dom";
 
 type LoginProps = {
