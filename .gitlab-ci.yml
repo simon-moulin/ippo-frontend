@@ -19,6 +19,7 @@ deploy:
   script:
     - chmod 400 $MASTER_SSH
     # Login to Gitlab Container registry
+    - ssh -o StrictHostKeyChecking=no -i $MASTER_SSH "${MASTER_USER}@${MASTER_HOST}" "ls -a"
     - ssh -o StrictHostKeyChecking=no -i $MASTER_SSH "${MASTER_USER}@${MASTER_HOST}" "sudo docker login -u ${CI_DEPLOY_USER} -p ${CI_DEPLOY_PASSWORD} ${CI_REGISTRY}"
     - ssh -o StrictHostKeyChecking=no -i $MASTER_SSH "${MASTER_USER}@${MASTER_HOST}" "sudo docker compose -f ~/traefik-docker-config/services/docker-compose-ippo-web.yml pull && sudo docker compose -f ~/traefik-docker-config/services/docker-compose-ippo-web.yml up -d"
   when: manual
