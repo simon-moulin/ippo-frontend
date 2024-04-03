@@ -8,7 +8,7 @@ WORKDIR /app
 RUN rm -rf node_modules/
 
 # install simple http server for serving static content
-RUN npm install -g http-server
+RUN npm install -g serve
 RUN npm install -g pnpm
 RUN npm install -g dotenv
 
@@ -19,4 +19,4 @@ RUN pnpm install
 RUN pnpm run build
 
 EXPOSE 5000
-CMD [ "http-server", "--proxy", "https://app.simonmoulin.fr", "dist", "-p", "5000" ]
+CMD [ "serve", "-s", "dist", "-l", "5000" ]
