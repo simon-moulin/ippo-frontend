@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AccountDTO } from "../services/ApiModels";
-import { GetMe } from "../services/ApiService";
+import { GetMe, ManageSubPage, SubscribePage } from "../services/ApiService";
 import {
   Card,
   Text,
@@ -10,6 +10,8 @@ import {
   Image,
   Modal,
   useDisclosure,
+  Badge,
+  Button,
 } from "@chakra-ui/react";
 import { MenuBar } from "../component/MenuBar";
 import { FollowModal } from "../component/FollowModal";
@@ -19,6 +21,7 @@ export function MePage() {
   const [modalType, setModalType] = useState<"following" | "followers">(
     "following"
   );
+
   const modalDisclosure = useDisclosure();
   useEffect(() => {
     GetMe().then((res) => {
@@ -40,7 +43,10 @@ export function MePage() {
               src={user?.imageUrl}
               alt={user?.username}
             />
-            <Text>Username : {user?.username}</Text>
+            <Text>
+              Username : {user?.username}{" "}
+              {user?.isPremium && <Badge colorScheme="green">Premium</Badge>}
+            </Text>
 
             <Text>Habits : {user?.habitCount}</Text>
             <Text>Email : {user?.email}</Text>
@@ -61,6 +67,28 @@ export function MePage() {
               Following : {user?.followings?.length}
             </Text>
             <Text>Created :</Text>
+            {user?.isPremium && (
+              <Button
+                size="sm"
+                onClick={async () => {
+                  window.open(await ManageSubPage());
+                }}
+              >
+                {" "}
+                Gérer mon abonnement
+              </Button>
+            )}
+            {!user?.isPremium && (
+              <Button
+                size="sm"
+                colorScheme="green"
+                onClick={async () => {
+                  window.open(await SubscribePage());
+                }}
+              >
+                M'abonner
+              </Button>
+            )}
           </CardBody>
         </Card>
         <Modal

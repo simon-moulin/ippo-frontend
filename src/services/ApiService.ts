@@ -143,11 +143,33 @@ const SearchUsers = async (word: string): Promise<UserDTO[]> => {
   return users.data.data;
 };
 
+const SubscribePage = async (): Promise<string> => {
+  const res = await axios.get(`${API_URL}/accounts/sub`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+
+  return res.data.url;
+};
+
+const ManageSubPage = async (): Promise<string> => {
+  const res = await axios.get(`${API_URL}/accounts/managesubscription`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+
+  return res.data.url;
+};
+
 export {
   LoginApi,
   SignUpApi,
   GetMe,
   GetFeed,
+  SubscribePage,
+  ManageSubPage,
   LikeUnlike,
   GetFollowers,
   GetFollowings,

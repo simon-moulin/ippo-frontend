@@ -12,6 +12,7 @@ export type UserDTO = {
   username: string;
   email: string;
   password: string;
+  isPremium: boolean;
   imageUrl: string;
   createdAt: string;
   status: null | "following" | "requested" | "not_following";
@@ -22,6 +23,7 @@ export type AccountDTO = {
   username: string;
   email: string;
   imageUrl: string;
+  isPremium: boolean;
   followers: UserDTO[] | null;
   followings: UserDTO[] | null;
   habits: HabitDTO[] | null;
