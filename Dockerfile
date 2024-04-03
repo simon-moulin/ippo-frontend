@@ -19,4 +19,4 @@ RUN pnpm install
 RUN pnpm run build
 
 EXPOSE 5000
-CMD [ "http-server", "dist", "-p", "5000" ]
+CMD [ "http-server", "--proxy", "https://app.simonmoulin.fr", "dist", "-p", "5000" ]
