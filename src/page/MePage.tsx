@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { AccountDTO } from "../services/ApiModels";
+import { useState } from "react";
 import { GetMe, ManageSubPage, SubscribePage } from "../services/ApiService";
 import {
   Card,
@@ -13,25 +12,24 @@ import {
   Badge,
   Button,
 } from "@chakra-ui/react";
-import { MenuBar } from "../component/MenuBar";
 import { FollowModal } from "../component/FollowModal";
 
+import { useQuery } from "@tanstack/react-query";
+
 export function MePage() {
-  const [user, setUser] = useState<AccountDTO>();
   const [modalType, setModalType] = useState<"following" | "followers">(
     "following"
   );
 
+  const { data } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: GetMe,
+  });
+
   const modalDisclosure = useDisclosure();
-  useEffect(() => {
-    GetMe().then((res) => {
-      setUser(res);
-    });
-  }, []);
 
   return (
     <>
-      <MenuBar />
       <Flex h="100vh" justifyContent="center" alignItems="center">
         <Card w="30%">
           <CardHeader>My infos</CardHeader>
@@ -40,23 +38,23 @@ export function MePage() {
               borderRadius="full"
               boxSize="40px"
               mb="10px"
-              src={user?.imageUrl}
-              alt={user?.username}
+              src={data?.imageUrl}
+              alt={data?.username}
             />
             <Text>
-              Username : {user?.username}{" "}
-              {user?.isPremium && <Badge colorScheme="green">Premium</Badge>}
+              Username : {data?.username}{" "}
+              {data?.isPremium && <Badge colorScheme="green">Premium</Badge>}
             </Text>
 
-            <Text>Habits : {user?.habitCount}</Text>
-            <Text>Email : {user?.email}</Text>
+            <Text>Habits : {data?.habitCount}</Text>
+            <Text>Email : {data?.email}</Text>
             <Text
               onClick={() => {
                 setModalType("followers");
                 modalDisclosure.onOpen();
               }}
             >
-              Followers : {user?.followers?.length}
+              Followers : {data?.followers?.length}
             </Text>
             <Text
               onClick={() => {
@@ -64,10 +62,10 @@ export function MePage() {
                 modalDisclosure.onOpen();
               }}
             >
-              Following : {user?.followings?.length}
+              Following : {data?.followings?.length}
             </Text>
             <Text>Created :</Text>
-            {user?.isPremium && (
+            {data?.isPremium && (
               <Button
                 size="sm"
                 onClick={async () => {
@@ -78,7 +76,7 @@ export function MePage() {
                 Gérer mon abonnement
               </Button>
             )}
-            {!user?.isPremium && (
+            {!data?.isPremium && (
               <Button
                 size="sm"
                 colorScheme="green"

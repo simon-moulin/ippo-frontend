@@ -16,31 +16,22 @@ import { SearchModal } from "./SearchModal";
 
 import { FaSearch, FaHome, FaSignOutAlt } from "react-icons/fa"; // Importation de l'icône de recherche
 import { FaAddressBook, FaUser, FaRepeat } from "react-icons/fa6";
-import { useEffect, useState } from "react";
 import { GetRequests } from "../services/ApiService";
+import { useQuery } from "@tanstack/react-query";
 
 export function MenuBar() {
   const navigation = useNavigate();
   const requestsDisclosure = useDisclosure();
   const searchDisclosure = useDisclosure();
-  const [nbRequests, setNbRequests] = useState(0);
   const logout = () => {
     localStorage.removeItem("token");
     navigation("/");
   };
 
-  const onCloseRequest = () => {
-    GetRequests().then((res) => {
-      setNbRequests(res.length);
-    });
-    requestsDisclosure.onClose();
-  };
-
-  useEffect(() => {
-    GetRequests().then((res) => {
-      setNbRequests(res.length);
-    });
-  }, []);
+  const { data } = useQuery({
+    queryKey: ["requests"],
+    queryFn: GetRequests,
+  });
 
   return (
     <>
@@ -77,9 +68,9 @@ export function MenuBar() {
           <Button
             leftIcon={<FaAddressBook />}
             rightIcon={
-              nbRequests > 0 ? (
+              data?.length > 0 ? (
                 <Badge backgroundColor="#ff5F5F" color="white" size="sm">
-                  {nbRequests}
+                  {data?.length}
                 </Badge>
               ) : (
                 <></>
@@ -118,10 +109,9 @@ export function MenuBar() {
           </Button>
         </CardFooter>
       </Card>
-
       <RequestsModal
         isOpen={requestsDisclosure.isOpen}
-        onClose={onCloseRequest}
+        onClose={requestsDisclosure.onClose}
       ></RequestsModal>
       <SearchModal
         isOpen={searchDisclosure.isOpen}

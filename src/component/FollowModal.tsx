@@ -18,45 +18,55 @@ import {
   GetFollowers,
   GetFollowings,
 } from "../services/ApiService";
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserDTO } from "../services/ApiModels";
 import { useNavigate } from "react-router-dom";
 
-type LoginProps = {
+type FollowModalProps = {
   isOpen: boolean;
   onClose: () => void;
   type: "followers" | "following";
 };
 
-export function FollowModal({ isOpen, onClose, type }: LoginProps) {
-  const [loading, setLoading] = useState(false);
+export function FollowModal({ isOpen, onClose, type }: FollowModalProps) {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<UserDTO[]>([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setLoading(true);
-    if (type == "followers") {
-      GetFollowers().then((res) => {
-        setUsers(res);
-        setLoading(false);
-      });
-    } else {
-      GetFollowings().then((res) => {
-        setUsers(res);
-        setLoading(false);
-      });
-    }
-  }, []);
+  const followersQuery = useQuery({
+    queryKey: ["followers"],
+    queryFn: GetFollowers,
+  });
+
+  const followingQuery = useQuery({
+    queryKey: ["followings"],
+    queryFn: GetFollowings,
+  });
+
+  const followersMutation = useMutation({
+    mutationFn: DeleteFollower,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+  });
+
+  const followingsMutation = useMutation({
+    mutationFn: DeleteFollowing,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["followings"] });
+
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+  });
 
   const onButtonClick = async (userId: number) => {
     if (type == "followers") {
-      await DeleteFollower(userId);
+      followersMutation.mutate(userId);
     }
     if (type == "following") {
-      await DeleteFollowing(userId);
+      followingsMutation.mutate(userId);
     }
-
-    setUsers(users.filter((el) => el.id != userId));
   };
 
   return (
@@ -68,10 +78,17 @@ export function FollowModal({ isOpen, onClose, type }: LoginProps) {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {loading ? (
+          {(
+            type == "followers"
+              ? followersQuery.isLoading
+              : followingQuery.isLoading
+          ) ? (
             <CircularProgress isIndeterminate size="30px" />
           ) : (
-            users.map((user: UserDTO) => {
+            (type == "followers"
+              ? followersQuery.data
+              : followingQuery.data
+            )?.map((user: UserDTO) => {
               return (
                 <Flex
                   justifyContent="space-between"

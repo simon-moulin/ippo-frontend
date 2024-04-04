@@ -12,7 +12,7 @@ import {
   Image,
   CircularProgress,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserDTO } from "../services/ApiModels";
 import { AcceptFollowRequest, GetRequests } from "../services/ApiService";
 import { useNavigate } from "react-router-dom";
@@ -23,22 +23,21 @@ type ModalProps = {
 };
 
 export function RequestsModal({ isOpen, onClose }: ModalProps) {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [users, setUsers] = useState<UserDTO[]>([]);
 
-  useEffect(() => {
-    setLoading(true);
-    GetRequests().then((res) => {
-      setUsers(res);
-      setLoading(false);
-    });
-  }, []);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ["requests"],
+    queryFn: GetRequests,
+  });
 
-  const onAcceptFollow = async (userId: number) => {
-    await AcceptFollowRequest(userId);
-    setUsers(users.filter((el) => el.id != userId));
-  };
+  const mutation = useMutation({
+    mutationFn: AcceptFollowRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -47,10 +46,10 @@ export function RequestsModal({ isOpen, onClose }: ModalProps) {
         <ModalHeader>Follow requests</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {loading ? (
+          {isLoading ? (
             <CircularProgress isIndeterminate size="30px" />
           ) : (
-            users.map((user: UserDTO) => {
+            data.map((user: UserDTO) => {
               return (
                 <Flex
                   justifyContent="space-between"
@@ -80,7 +79,7 @@ export function RequestsModal({ isOpen, onClose }: ModalProps) {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      onAcceptFollow(user.id);
+                      mutation.mutate(user.id);
                     }}
                   >
                     Accept
