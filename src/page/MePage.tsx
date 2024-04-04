@@ -11,6 +11,7 @@ import {
   useDisclosure,
   Badge,
   Button,
+  CircularProgress,
 } from "@chakra-ui/react";
 import { FollowModal } from "../component/FollowModal";
 
@@ -21,7 +22,7 @@ export function MePage() {
     "following"
   );
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: GetMe,
   });
@@ -34,58 +35,66 @@ export function MePage() {
         <Card w="30%">
           <CardHeader>My infos</CardHeader>
           <CardBody>
-            <Image
-              borderRadius="full"
-              boxSize="40px"
-              mb="10px"
-              src={data?.imageUrl}
-              alt={data?.username}
-            />
-            <Text>
-              Username : {data?.username}{" "}
-              {data?.isPremium && <Badge colorScheme="green">Premium</Badge>}
-            </Text>
+            {isLoading ? (
+              <CircularProgress isIndeterminate size="30px" />
+            ) : (
+              <>
+                <Image
+                  borderRadius="full"
+                  boxSize="40px"
+                  mb="10px"
+                  src={data?.imageUrl}
+                  alt={data?.username}
+                />
+                <Text>
+                  Username : {data?.username}{" "}
+                  {data?.isPremium && (
+                    <Badge colorScheme="green">Premium</Badge>
+                  )}
+                </Text>
 
-            <Text>Habits : {data?.habitCount}</Text>
-            <Text>Email : {data?.email}</Text>
-            <Text
-              onClick={() => {
-                setModalType("followers");
-                modalDisclosure.onOpen();
-              }}
-            >
-              Followers : {data?.followers?.length}
-            </Text>
-            <Text
-              onClick={() => {
-                setModalType("following");
-                modalDisclosure.onOpen();
-              }}
-            >
-              Following : {data?.followings?.length}
-            </Text>
-            <Text>Created :</Text>
-            {data?.isPremium && (
-              <Button
-                size="sm"
-                onClick={async () => {
-                  window.open(await ManageSubPage());
-                }}
-              >
-                {" "}
-                Gérer mon abonnement
-              </Button>
-            )}
-            {!data?.isPremium && (
-              <Button
-                size="sm"
-                colorScheme="green"
-                onClick={async () => {
-                  window.open(await SubscribePage());
-                }}
-              >
-                M'abonner
-              </Button>
+                <Text>Habits : {data?.habitCount}</Text>
+                <Text>Email : {data?.email}</Text>
+                <Text
+                  onClick={() => {
+                    setModalType("followers");
+                    modalDisclosure.onOpen();
+                  }}
+                >
+                  Followers : {data?.followers?.length}
+                </Text>
+                <Text
+                  onClick={() => {
+                    setModalType("following");
+                    modalDisclosure.onOpen();
+                  }}
+                >
+                  Following : {data?.followings?.length}
+                </Text>
+                <Text>Created :</Text>
+                {data?.isPremium && (
+                  <Button
+                    size="sm"
+                    onClick={async () => {
+                      window.open(await ManageSubPage());
+                    }}
+                  >
+                    {" "}
+                    Gérer mon abonnement
+                  </Button>
+                )}
+                {!data?.isPremium && (
+                  <Button
+                    size="sm"
+                    colorScheme="green"
+                    onClick={async () => {
+                      window.open(await SubscribePage());
+                    }}
+                  >
+                    M'abonner
+                  </Button>
+                )}
+              </>
             )}
           </CardBody>
         </Card>
