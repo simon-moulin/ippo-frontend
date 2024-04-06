@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { GetMe, ManageSubPage, SubscribePage } from "../services/ApiService";
 import {
-  Card,
   Text,
-  CardBody,
-  CardHeader,
-  Flex,
-  Image,
   Modal,
   useDisclosure,
   Badge,
-  Button,
-  CircularProgress,
+  Container,
+  VStack,
+  Stack,
+  Avatar,
 } from "@chakra-ui/react";
 import { FollowModal } from "../component/FollowModal";
 
@@ -22,7 +19,7 @@ export function MePage() {
     "following"
   );
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["currentUser"],
     queryFn: GetMe,
   });
@@ -31,85 +28,53 @@ export function MePage() {
 
   return (
     <>
-      <Flex h="100vh" justifyContent="center" alignItems="center">
-        <Card w="30%">
-          <CardHeader>My infos</CardHeader>
-          <CardBody>
-            {isLoading ? (
-              <CircularProgress isIndeterminate size="30px" />
-            ) : (
-              <>
-                <Image
-                  borderRadius="full"
-                  boxSize="40px"
-                  mb="10px"
-                  src={data?.imageUrl}
-                  alt={data?.username}
-                />
-                <Text>
-                  Username : {data?.username}{" "}
-                  {data?.isPremium && (
-                    <Badge colorScheme="green">Premium</Badge>
-                  )}
-                </Text>
+      <Container maxW="container.md">
+        <VStack spacing={8}>
+          <Avatar size="2xl" name={data?.username} src={data?.imageUrl} />
+          <Text fontSize="2xl" fontWeight="bold">
+            {data?.username}
+          </Text>
+          <Text fontSize="lg" color="gray.500">
+            {data?.email}
+          </Text>
+          <Stack direction="row" spacing={4}>
+            {data?.isPremium && <Badge colorScheme="green">Premium</Badge>}
+            <Text fontWeight="semibold">{data?.habitCount} Habitudes</Text>
+            <Text
+              fontWeight="semibold"
+              cursor="pointer"
+              onClick={() => {
+                setModalType("followers");
+                modalDisclosure.onOpen();
+              }}
+            >
+              {data?.numberOfFollowers} Followers
+            </Text>
+            <Text
+              fontWeight="semibold"
+              cursor="pointer"
+              onClick={() => {
+                setModalType("following");
+                modalDisclosure.onOpen();
+              }}
+            >
+              {data?.numberOfFollowings} Suivi(e)s{" "}
+            </Text>
+          </Stack>
+        </VStack>
+      </Container>
 
-                <Text>Habits : {data?.habitCount}</Text>
-                <Text>Email : {data?.email}</Text>
-                <Text
-                  onClick={() => {
-                    setModalType("followers");
-                    modalDisclosure.onOpen();
-                  }}
-                >
-                  Followers : {data?.followers?.length}
-                </Text>
-                <Text
-                  onClick={() => {
-                    setModalType("following");
-                    modalDisclosure.onOpen();
-                  }}
-                >
-                  Following : {data?.followings?.length}
-                </Text>
-                <Text>Created :</Text>
-                {data?.isPremium && (
-                  <Button
-                    size="sm"
-                    onClick={async () => {
-                      window.open(await ManageSubPage());
-                    }}
-                  >
-                    {" "}
-                    Gérer mon abonnement
-                  </Button>
-                )}
-                {!data?.isPremium && (
-                  <Button
-                    size="sm"
-                    colorScheme="green"
-                    onClick={async () => {
-                      window.open(await SubscribePage());
-                    }}
-                  >
-                    M'abonner
-                  </Button>
-                )}
-              </>
-            )}
-          </CardBody>
-        </Card>
-        <Modal
+      <Modal
+        isOpen={modalDisclosure.isOpen}
+        onClose={modalDisclosure.onClose}
+        size="lg"
+      >
+        <FollowModal
           isOpen={modalDisclosure.isOpen}
           onClose={modalDisclosure.onClose}
-          size="lg"
-        >
-          <FollowModal
-            isOpen={modalDisclosure.isOpen}
-            onClose={modalDisclosure.onClose}
-            type={modalType}
-          ></FollowModal>
-        </Modal>
-      </Flex>
+          type={modalType}
+        ></FollowModal>
+      </Modal>
     </>
   );
 }

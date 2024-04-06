@@ -51,7 +51,15 @@ export function MenuBar() {
           >
             Feed
           </Button>
-          <Button w="95%" variant="outline" mb="10px" leftIcon={<FaRepeat />}>
+          <Button
+            w="95%"
+            variant="outline"
+            mb="10px"
+            leftIcon={<FaRepeat />}
+            onClick={() => {
+              navigation("/habits");
+            }}
+          >
             Habits
           </Button>
           <Button

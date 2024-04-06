@@ -60,7 +60,7 @@ export function RequestsModal({ isOpen, onClose }: ModalProps) {
                   <Flex
                     alignItems="center"
                     onClick={() => {
-                      navigate(`/user/${user.id}`);
+                      navigate(`/profil/${user.id}`);
                     }}
                   >
                     <Image

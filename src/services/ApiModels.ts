@@ -52,10 +52,33 @@ export type CreateUserResponseDTO = {
   message: string | undefined;
 };
 
-export type HabitDTO = {
+export type HabitForValidationDTO = {
   id: number;
   name: string;
   user: UserDTO;
+};
+
+export type CreateHabitDTO = {
+  name: string;
+  frequency: string;
+  occurency: number;
+  categoryName: string;
+  visibility: boolean;
+};
+
+export type CategoryDTO = {
+  id: number;
+  name: string;
+};
+
+export type HabitDTO = {
+  id: number;
+  visibility: boolean;
+  name: string;
+  frequency: "WEEKLY" | "DAILY" | "MONTHLY";
+  occurency: number;
+  userId: number;
+  deleted: boolean;
 };
 
 export type ValidationDTO = {
@@ -64,7 +87,7 @@ export type ValidationDTO = {
   validatedAt: string;
   message: string;
   counter: number;
-  Habit: HabitDTO;
+  Habit: HabitForValidationDTO;
   isValid: boolean;
   isLiked: boolean | null;
   likedBy: Array<{ userId: number }>;

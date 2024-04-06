@@ -1,13 +1,53 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  VStack,
+  Text,
+  Avatar,
+  Stack,
+  Badge,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
+import { GetUserProfil } from "../services/ApiService";
+import { AccountDTO } from "../services/ApiModels";
 
-export default function ProfilePage() {
-  const params = useParams();
+const ProfilePage = () => {
+  const { id } = useParams();
+  const [data, setUserProfile] = useState<AccountDTO>();
+
+  useEffect(() => {
+    GetUserProfil(parseInt(id!)).then((data) => {
+      setUserProfile(data);
+    });
+  }, [id]);
+
+  if (!data) {
+    return <div>Chargement...</div>;
+  }
+
   return (
     <>
-      <Flex h="100vh" justifyContent="center" alignItems="center">
-        <Text>Profile page {params.id}</Text>
-      </Flex>
+      <Container maxW="container.md">
+        <VStack spacing={8}>
+          <Avatar size="2xl" name={data?.username} src={data?.imageUrl} />
+          <Text fontSize="2xl">{data?.username}</Text>
+          <Text fontSize="lg" color="gray.500">
+            {data?.email}
+          </Text>
+          <Stack direction="row" spacing={4}>
+            {data?.isPremium && <Badge colorScheme="green">Premium</Badge>}
+            <Text fontWeight="semibold">{data?.habitCount} Habitudes</Text>
+            <Text fontWeight="semibold">
+              {data?.numberOfFollowers} Followers
+            </Text>
+            <Text fontWeight="semibold">
+              {data?.numberOfFollowings} Suivi(e)s{" "}
+            </Text>
+          </Stack>
+        </VStack>
+      </Container>
     </>
   );
-}
+};
+
+export default ProfilePage;

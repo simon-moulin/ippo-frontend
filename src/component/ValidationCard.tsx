@@ -46,7 +46,7 @@ export function ValidationCard({ el }: ValidationCardProps) {
           <Flex>
             <Image
               onClick={() => {
-                navigate(`/user/${el.Habit.user.id}`);
+                navigate(`/profil/${el.Habit.user.id}`);
               }}
               borderRadius="full"
               boxSize="40px"

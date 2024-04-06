@@ -100,7 +100,7 @@ export function FollowModal({ isOpen, onClose, type }: FollowModalProps) {
                     mb="5px"
                     key={user.id}
                     onClick={() => {
-                      navigate(`/user/${user.id}`);
+                      navigate(`/profil/${user.id}`);
                     }}
                   >
                     <Image

@@ -6,6 +6,9 @@ import {
   UserDTO,
   ValidationDTO,
   AccountDTO,
+  HabitDTO,
+  CreateHabitDTO,
+  CategoryDTO,
 } from "./ApiModels";
 import axios from "axios";
 
@@ -163,8 +166,53 @@ const ManageSubPage = async (): Promise<string> => {
   return res.data.url;
 };
 
+const GetHabits = async (): Promise<HabitDTO[]> => {
+  const res = await axios.get(`${API_URL}/habits`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+
+  return res.data.data;
+};
+
+const CreateHabit = async (toCreate: CreateHabitDTO) => {
+  await axios.post(`${API_URL}/habits`, toCreate, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+};
+
+const GetHabitCategories = async (): Promise<CategoryDTO[]> => {
+  const res = await axios.get(`${API_URL}/habits/category`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+  return res.data.data;
+};
+
+const DeleteHabit = async (habitId: number): Promise<void> => {
+  await axios.delete(`${API_URL}/habits/${habitId}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+};
+
+const GetUserProfil = async (userId: number): Promise<AccountDTO> => {
+  const res = await axios.get(`${API_URL}/accounts/${userId}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+  return res.data.data;
+};
+
 export {
   LoginApi,
+  GetUserProfil,
   SignUpApi,
   GetMe,
   GetFeed,
@@ -176,7 +224,11 @@ export {
   AcceptFollowRequest,
   GetRequests,
   DeleteFollower,
+  DeleteHabit,
   DeleteFollowing,
   SearchUsers,
   SendFollowRequest,
+  GetHabits,
+  GetHabitCategories,
+  CreateHabit,
 };

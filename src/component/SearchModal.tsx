@@ -100,7 +100,7 @@ export function SearchModal({ isOpen, onClose }: ModalProps) {
                   <Flex
                     alignItems="center"
                     onClick={() => {
-                      navigate(`/user/${user.id}`);
+                      navigate(`/profil/${user.id}`);
                     }}
                   >
                     <Image
