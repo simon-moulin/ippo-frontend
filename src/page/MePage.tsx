@@ -9,6 +9,7 @@ import {
   VStack,
   Stack,
   Avatar,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { FollowModal } from "../component/FollowModal";
 
@@ -19,7 +20,7 @@ export function MePage() {
     "following"
   );
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: GetMe,
   });
@@ -32,6 +33,12 @@ export function MePage() {
         <VStack spacing={8}>
           <Avatar size="2xl" name={data?.username} src={data?.imageUrl} />
           <Text fontSize="2xl">
+            <SkeletonText
+              isLoaded={!isLoading}
+              noOfLines={1}
+              width="150px"
+              skeletonHeight="3"
+            />
             {data?.username}
             {data?.isPremium && (
               <Badge ml={2} colorScheme="green" height="20px">
@@ -40,6 +47,12 @@ export function MePage() {
             )}
           </Text>
           <Text fontSize="lg" color="gray.500">
+            <SkeletonText
+              isLoaded={!isLoading}
+              noOfLines={1}
+              width="150px"
+              skeletonHeight="3"
+            />
             {data?.email}
           </Text>
           <Stack direction="row" spacing={4}>

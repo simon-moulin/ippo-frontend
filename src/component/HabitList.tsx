@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { HabitDTO } from "../services/ApiModels";
 import { FaTrash } from "react-icons/fa6";
+import { HabitSkeleton } from "./HabitSkeleton";
 
 type HabitListProps = {
   habits: HabitDTO[] | undefined;
@@ -31,6 +32,13 @@ export function HabitList({ habits, onDelete }: HabitListProps) {
   };
   return (
     <VStack align="stretch" spacing={4} width="50%">
+      {!habits && (
+        <>
+          <HabitSkeleton />
+          <HabitSkeleton />
+          <HabitSkeleton />
+        </>
+      )}
       {habits?.map((habit) => (
         <Box
           key={habit.id}

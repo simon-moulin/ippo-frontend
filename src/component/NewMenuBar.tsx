@@ -37,7 +37,7 @@ export function NewMenuBar() {
 
   return (
     <>
-      <Box>
+      <Box width="30%">
         <SidebarContent
           onClose={onClose}
           requestsDisclosure={requestsDisclosure}
