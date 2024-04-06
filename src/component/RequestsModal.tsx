@@ -9,8 +9,8 @@ import {
   Text,
   Flex,
   ModalOverlay,
-  Image,
   CircularProgress,
+  Avatar,
 } from "@chakra-ui/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserDTO } from "../services/ApiModels";
@@ -63,12 +63,12 @@ export function RequestsModal({ isOpen, onClose }: ModalProps) {
                       navigate(`/profil/${user.id}`);
                     }}
                   >
-                    <Image
+                    <Avatar
                       borderRadius="full"
                       boxSize="40px"
                       mr="10px"
+                      name={user.username}
                       src={user.imageUrl}
-                      alt={user.username}
                     />
                     <Box>
                       <Text key={user.id}>{user.username}</Text>

@@ -9,12 +9,12 @@ import {
   Text,
   Flex,
   ModalOverlay,
-  Image,
   CircularProgress,
   InputGroup,
   Input,
   InputRightElement,
   Icon,
+  Avatar,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { UserDTO } from "../services/ApiModels";
@@ -103,12 +103,12 @@ export function SearchModal({ isOpen, onClose }: ModalProps) {
                       navigate(`/profil/${user.id}`);
                     }}
                   >
-                    <Image
+                    <Avatar
                       borderRadius="full"
                       boxSize="40px"
                       mr="10px"
+                      name={user.username}
                       src={user.imageUrl}
-                      alt={user.username}
                     />
                     <Box>
                       <Text key={user.id}>{user.username}</Text>

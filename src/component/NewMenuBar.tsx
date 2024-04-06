@@ -11,21 +11,29 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Badge,
 } from "@chakra-ui/react";
 
 import { IconType } from "react-icons";
-import { ReactText } from "react";
+import { ReactNode } from "react";
 import { FiMenu } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { RequestsModal } from "./RequestsModal";
 import { SearchModal } from "./SearchModal";
-import { FaHome, FaSearch } from "react-icons/fa";
+import { FaHome, FaSearch, FaSignOutAlt } from "react-icons/fa";
 import { FaAddressBook, FaRepeat, FaUser } from "react-icons/fa6";
+import { useQuery } from "@tanstack/react-query";
+import { GetRequests } from "../services/ApiService";
 
-export default function SimpleSidebar() {
+export function NewMenuBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const requestsDisclosure = useDisclosure();
   const searchDisclosure = useDisclosure();
+
+  const { data } = useQuery({
+    queryKey: ["requests"],
+    queryFn: GetRequests,
+  });
 
   return (
     <>
@@ -34,6 +42,7 @@ export default function SimpleSidebar() {
           onClose={() => onClose}
           requestsDisclosure={requestsDisclosure}
           searchDisclosure={searchDisclosure}
+          requestsNumber={data?.length}
           display={{ base: "none", md: "block" }}
         />
         <Drawer
@@ -46,6 +55,7 @@ export default function SimpleSidebar() {
         >
           <DrawerContent>
             <SidebarContent
+              requestsNumber={data?.length}
               onClose={onClose}
               requestsDisclosure={requestsDisclosure}
               searchDisclosure={searchDisclosure}
@@ -80,15 +90,21 @@ interface SidebarProps extends BoxProps {
     isOpen: boolean;
     onOpen: () => void;
   };
+  requestsNumber: number;
 }
 
 const SidebarContent = ({
   onClose,
   requestsDisclosure,
   searchDisclosure,
+  requestsNumber,
   ...rest
 }: SidebarProps) => {
   const navigation = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigation("/");
+  };
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -136,6 +152,13 @@ const SidebarContent = ({
         }}
       >
         Request
+        {requestsNumber > 0 ? (
+          <Badge ml={2} backgroundColor="#ff5F5F" color="white" size="sm">
+            {requestsNumber}
+          </Badge>
+        ) : (
+          <></>
+        )}
       </NavItem>
       <NavItem
         icon={FaUser}
@@ -143,7 +166,10 @@ const SidebarContent = ({
           navigation("/me");
         }}
       >
-        My account
+        Profile
+      </NavItem>
+      <NavItem mt="auto" color="red.400" icon={FaSignOutAlt} onClick={logout}>
+        Logout
       </NavItem>
     </Box>
   );
@@ -151,16 +177,11 @@ const SidebarContent = ({
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
-  children: ReactText;
+  children: ReactNode;
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
-    <Box
-      as="a"
-      href="#"
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
-    >
+    <Box style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
         align="center"
         p="4"

@@ -9,8 +9,8 @@ import {
   Text,
   Flex,
   ModalOverlay,
-  Image,
   CircularProgress,
+  Avatar,
 } from "@chakra-ui/react";
 import {
   DeleteFollower,
@@ -97,20 +97,21 @@ export function FollowModal({ isOpen, onClose, type }: FollowModalProps) {
                   key={user.id}
                 >
                   <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
                     mb="5px"
                     key={user.id}
                     onClick={() => {
                       navigate(`/profil/${user.id}`);
                     }}
                   >
-                    <Image
+                    <Avatar
                       borderRadius="full"
                       boxSize="40px"
                       mr="10px"
+                      name={user.username}
                       src={user.imageUrl}
-                      alt={user.username}
                     />
-
                     <Box>
                       <Text key={user.id}>{user.username}</Text>
                     </Box>

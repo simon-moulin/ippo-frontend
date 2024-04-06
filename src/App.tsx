@@ -4,7 +4,7 @@ import { HabitPage } from "./page/HabitPage";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { MePage } from "./page/MePage";
 import ProfilePage from "./page/ProfilPage";
-import SimpleSidebar from "./component/NewMenuBar";
+import { NewMenuBar } from "./component/NewMenuBar";
 
 function App() {
   return (
@@ -14,8 +14,7 @@ function App() {
         <Route
           element={
             <>
-              {/* <MenuBar /> */}
-              <SimpleSidebar />
+              <NewMenuBar />
               <Outlet />
             </>
           }
