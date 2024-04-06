@@ -3,7 +3,6 @@ import { HomePage } from "./page/HomePage";
 import { HabitPage } from "./page/HabitPage";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { MePage } from "./page/MePage";
-import { MenuBar } from "./component/MenuBar";
 import ProfilePage from "./page/ProfilPage";
 import SimpleSidebar from "./component/NewMenuBar";
 
