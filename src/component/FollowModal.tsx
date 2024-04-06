@@ -101,6 +101,7 @@ export function FollowModal({ isOpen, onClose, type }: FollowModalProps) {
                     alignItems="center"
                     mb="5px"
                     key={user.id}
+                    cursor="pointer"
                     onClick={() => {
                       navigate(`/profil/${user.id}`);
                     }}

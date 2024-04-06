@@ -99,6 +99,7 @@ export function SearchModal({ isOpen, onClose }: ModalProps) {
                 >
                   <Flex
                     alignItems="center"
+                    cursor="pointer"
                     onClick={() => {
                       navigate(`/profil/${user.id}`);
                     }}
