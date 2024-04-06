@@ -39,7 +39,7 @@ export function NewMenuBar() {
     <>
       <Box>
         <SidebarContent
-          onClose={() => onClose}
+          onClose={onClose}
           requestsDisclosure={requestsDisclosure}
           searchDisclosure={searchDisclosure}
           requestsNumber={data?.length}
@@ -125,6 +125,7 @@ const SidebarContent = ({
         icon={FaHome}
         onClick={() => {
           navigation("/feed");
+          onClose();
         }}
       >
         Feed
@@ -133,6 +134,7 @@ const SidebarContent = ({
         icon={FaRepeat}
         onClick={() => {
           navigation("/habits");
+          onClose();
         }}
       >
         Habits
@@ -141,6 +143,7 @@ const SidebarContent = ({
         icon={FaSearch}
         onClick={() => {
           searchDisclosure.onOpen();
+          onClose();
         }}
       >
         Search
@@ -149,6 +152,7 @@ const SidebarContent = ({
         icon={FaAddressBook}
         onClick={() => {
           requestsDisclosure.onOpen();
+          onClose();
         }}
       >
         Request
@@ -164,6 +168,7 @@ const SidebarContent = ({
         icon={FaUser}
         onClick={() => {
           navigation("/me");
+          onClose();
         }}
       >
         Profile

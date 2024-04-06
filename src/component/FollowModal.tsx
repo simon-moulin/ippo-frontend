@@ -114,7 +114,9 @@ export function FollowModal({ isOpen, onClose, type }: FollowModalProps) {
                       src={user.imageUrl}
                     />
                     <Box>
-                      <Text key={user.id}>{user.username}</Text>
+                      <Text key={user.id} fontWeight="medium">
+                        {user.username}
+                      </Text>
                     </Box>
                   </Flex>
                   <Button

@@ -4,11 +4,11 @@ import {
   CardBody,
   Icon,
   Text,
-  Image,
   CardFooter,
   CardHeader,
   Flex,
   Heading,
+  Avatar,
 } from "@chakra-ui/react";
 import { timeAgo } from "../utils/DateUtils";
 import { UserDTO, ValidationDTO } from "../services/ApiModels";
@@ -40,11 +40,19 @@ export function ValidationCard({ el }: ValidationCardProps) {
     }
   };
   return (
-    <Card w="50%" m="3vh" key={el.id}>
+    <Card
+      w="50%"
+      m="3vh"
+      key={el.id}
+      onDoubleClick={() => {
+        like(el);
+      }}
+    >
       <CardHeader>
         <Heading size="md">
           <Flex>
-            <Image
+            <Avatar
+              cursor="pointer"
               onClick={() => {
                 navigate(`/profil/${el.Habit.user.id}`);
               }}
@@ -52,9 +60,9 @@ export function ValidationCard({ el }: ValidationCardProps) {
               boxSize="40px"
               mr="10px"
               src={el.Habit.user.imageUrl}
-              alt={el.Habit.user.username}
+              name={el.Habit.user.username}
             />
-            <Box>
+            <Box fontSize="md">
               {el.Habit.user.username} validated {el.Habit.name}
               <Text fontSize="xs" color="darkgray" fontWeight="normal">
                 {timeAgo(new Date(el.validatedAt))}

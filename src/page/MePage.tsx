@@ -31,14 +31,18 @@ export function MePage() {
       <Container maxW="container.md">
         <VStack spacing={8}>
           <Avatar size="2xl" name={data?.username} src={data?.imageUrl} />
-          <Text fontSize="2xl" fontWeight="bold">
+          <Text fontSize="2xl">
             {data?.username}
+            {data?.isPremium && (
+              <Badge ml={2} colorScheme="green" height="20px">
+                Premium
+              </Badge>
+            )}
           </Text>
           <Text fontSize="lg" color="gray.500">
             {data?.email}
           </Text>
           <Stack direction="row" spacing={4}>
-            {data?.isPremium && <Badge colorScheme="green">Premium</Badge>}
             <Text fontWeight="semibold">{data?.habitCount} Habitudes</Text>
             <Text
               fontWeight="semibold"
