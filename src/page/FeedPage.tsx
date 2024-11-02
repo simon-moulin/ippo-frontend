@@ -1,17 +1,11 @@
-import { GetFeed } from "../services/ApiService";
-// import { ValidationDTO } from "../services/ApiModels";
-
 import { Flex } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 
 import { ValidationCard } from "../component/ValidationCard";
 import { SkeletonCard } from "../component/SkeletonCard";
+import { useFeed } from "../entities/Feed";
 
 export function FeedPage() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["feed"],
-    queryFn: GetFeed,
-  });
+  const { data, isLoading } = useFeed();
 
   return (
     <>

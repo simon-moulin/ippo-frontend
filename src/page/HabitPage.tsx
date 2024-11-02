@@ -1,6 +1,3 @@
-import { GetHabits, CreateHabit, DeleteHabit } from "../services/ApiService";
-// import { ValidationDTO } from "../services/ApiModels";
-
 import { FaPlus } from "react-icons/fa";
 import {
   Box,
@@ -11,37 +8,16 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { HabitList } from "../component/HabitList";
 import HabitCreateModal from "../component/HabitCreateModal";
 import { CreateHabitDTO } from "../services/ApiModels";
+import { useHabit } from "../entities/Habit";
 
 export function HabitPage() {
-  const queryClient = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ["habits"],
-    queryFn: GetHabits,
-  });
-
-  const createHabitMutation = useMutation({
-    mutationFn: CreateHabit,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-    },
-  });
-
-  const deleteHabitMutation = useMutation({
-    mutationFn: DeleteHabit,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-    },
-  });
+  const { data, createHabit, deleteHabit } = useHabit();
 
   const handleCreateHabit = (newHabit: CreateHabitDTO) => {
-    console.log(newHabit);
-    createHabitMutation.mutate(newHabit);
+    createHabit(newHabit);
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -51,7 +27,7 @@ export function HabitPage() {
         <VStack spacing={8}>
           <HabitList
             habits={data}
-            onDelete={(habitId: number) => deleteHabitMutation.mutate(habitId)}
+            onDelete={(habitId: number) => deleteHabit(habitId)}
           />
           <Box position="fixed" bottom="4" right="4">
             <Tooltip label="Ajouter un nouvel habit" placement="top">

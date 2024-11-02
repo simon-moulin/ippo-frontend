@@ -4,11 +4,12 @@ import {
   Text,
   Modal,
   useDisclosure,
-  Badge,
   Container,
   VStack,
   Stack,
   Avatar,
+  Skeleton,
+  Badge,
   SkeletonText,
 } from "@chakra-ui/react";
 import { FollowModal } from "../component/FollowModal";
@@ -32,13 +33,9 @@ export function MePage() {
       <Container maxW="container.md">
         <VStack spacing={8}>
           <Avatar size="2xl" name={data?.username} src={data?.imageUrl} />
+
+          <Skeleton isLoaded={!isLoading} noOfLines={1} width="150px" />
           <Text fontSize="2xl">
-            <SkeletonText
-              isLoaded={!isLoading}
-              noOfLines={1}
-              width="150px"
-              skeletonHeight="3"
-            />
             {data?.username}
             {data?.isPremium && (
               <Badge ml={2} colorScheme="green" height="20px">
@@ -46,13 +43,19 @@ export function MePage() {
               </Badge>
             )}
           </Text>
+          <SkeletonText
+            isLoaded={!isLoading}
+            noOfLines={1}
+            width="150px"
+            skeletonHeight="3"
+          />
           <Text fontSize="lg" color="gray.500">
-            <SkeletonText
+            {/* <SkeletonText
               isLoaded={!isLoading}
               noOfLines={1}
               width="150px"
               skeletonHeight="3"
-            />
+            /> */}
             {data?.email}
           </Text>
           <Stack direction="row" spacing={4}>
